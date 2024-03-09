@@ -1,9 +1,9 @@
 def generate_image_from_text(api_key, text_prompts, output_directory, book_name):
-
     import requests
     import os
     import base64
-
+    import time
+    
     url = "https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image"
 
     body = {
@@ -78,6 +78,7 @@ def get_generation_id(api_key, image_path):
 def download_generated_video(api_key, generation_id, output_path):
 
     import requests
+    from time import sleep
     url = f"https://api.stability.ai/v2alpha/generation/image-to-video/result/{generation_id}"
 
     headers = {
@@ -86,15 +87,16 @@ def download_generated_video(api_key, generation_id, output_path):
     }
 
     response = requests.get(url, headers=headers)
+    print("Response status:", response.status_code)
+    while response.status_code !=200:
+        if response.status_code == 202:
+            print("Generation in-progress, try again in 10 seconds.")
+            sleep(5)
+            response = requests.get(url, headers=headers)
 
-    if response.status_code == 202:
-        print("Generation in-progress, try again in 10 seconds.")
-    elif response.status_code == 200:
-        print("Generation complete!")
-        with open(output_path, 'wb') as file:
-            file.write(response.content)
-    else:
-        raise Exception(str(response.json()))
+    print("Generation complete!")
+    with open(output_path, 'wb') as file:
+        file.write(response.content)
 #%%
 def generate_and_download_video(api_key, image_path):
 
