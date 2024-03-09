@@ -1,9 +1,9 @@
 def generate_image_from_text(api_key, text_prompts, output_directory, book_name):
-
     import requests
     import os
     import base64
-
+    import time
+    
     url = "https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image"
 
     body = {
@@ -33,10 +33,11 @@ def generate_image_from_text(api_key, text_prompts, output_directory, book_name)
     # Ensure the output directory exists
     os.makedirs(output_directory, exist_ok=True)
 
-    for i, image in enumerate(data["artifacts"]):
-        image_path = os.path.join(output_directory, f'{book_name}_{image["seed"]}.png')
-        with open(image_path, "wb") as f:
-            f.write(base64.b64decode(image["base64"]))
+    image = data["artifacts"]
+    image_path = os.path.join(output_directory, f'{book_name}_{image["seed"]}.png')
+    with open(image_path, "wb") as f:
+        f.write(base64.b64decode(image["base64"]))
+    return image_path
 
 #%%
 def resize_image(input_path, width = 768 , height = 768):
@@ -49,6 +50,8 @@ def resize_image(input_path, width = 768 , height = 768):
 
     # Save the resized image
     img_resized.save(input_path)
+    resized_path = os.path(img_resized)
+    return resized_path
 #%%
 def get_generation_id(api_key, image_path):
     import requests
@@ -78,6 +81,7 @@ def get_generation_id(api_key, image_path):
 def download_generated_video(api_key, generation_id, output_path):
 
     import requests
+    from time import sleep
     url = f"https://api.stability.ai/v2alpha/generation/image-to-video/result/{generation_id}"
 
     headers = {
@@ -86,24 +90,28 @@ def download_generated_video(api_key, generation_id, output_path):
     }
 
     response = requests.get(url, headers=headers)
+    print("Response status:", response.status_code)
+    while response.status_code !=200:
+        if response.status_code == 202:
+            print("Generation in-progress, try again in 10 seconds.")
+            sleep(5)
+            response = requests.get(url, headers=headers)
 
-    if response.status_code == 202:
-        print("Generation in-progress, try again in 10 seconds.")
-    elif response.status_code == 200:
-        print("Generation complete!")
-        with open(output_path, 'wb') as file:
-            file.write(response.content)
-    else:
-        raise Exception(str(response.json()))
+    print("Generation complete!")
+    with open(output_path, 'wb') as file:
+        file.write(response.content)
 #%%
-def generate_and_download_video(api_key, image_path):
+def generate_and_download_video(api_key, text_prompts, output_directory, book_name):
 
     import os
+    image_path = generate_image_from_text(api_key, text_prompts, output_directory, book_name)
+    print(image_path)
+    resize_image(image_path)
     image_name = os.path.basename(image_path)
-    output_path = f"Videos/{image_name}.mp4"
+    output_path_videos = f"Videos/{image_name}.mp4"
     generation_id = get_generation_id(api_key, image_path)
 
     if generation_id:
-        download_generated_video(api_key, generation_id, output_path)
+        download_generated_video(api_key, generation_id, output_path_videos)
 
 #%%
