@@ -64,7 +64,7 @@ def main():
 
             # Placeholder for backend processing (simulated with time.sleep)
             with st.spinner("Processing..."):
-                time.sleep(5)
+                time.sleep(10)
 
             #     out = ChaptersSummaryAI(file_path, api_key).ChapterSummary()
             #     # Send each chapter summary to SD to get videos
