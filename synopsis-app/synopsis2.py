@@ -64,38 +64,41 @@ def main():
 
             # Placeholder for backend processing (simulated with time.sleep)
             with st.spinner("Processing..."):
+                time.sleep(5)
 
-                out = ChaptersSummaryAI(file_path, api_key).ChapterSummary()
-                # Send each chapter summary to SD to get videos
-                # videos = get_files_in_directory(
-                #     # "C:\\Users\\roman\\Projects\\synopsis-app\\book\\Videos"
-                #     "/mnt/c/Users/t/Documents/GIT/Encode-AI-Hackathon/synopsis-app/book/Videos"
-                # )
+            #     out = ChaptersSummaryAI(file_path, api_key).ChapterSummary()
+            #     # Send each chapter summary to SD to get videos
+            #     # videos = get_files_in_directory(
+            #     #     # "C:\\Users\\roman\\Projects\\synopsis-app\\book\\Videos"
+            #     #     "/mnt/c/Users/t/Documents/GIT/Encode-AI-Hackathon/synopsis-app/book/Videos"
+            #     # )
 
-                videos = []
-                counter = 0
-                current_datetime = time.strftime("%Y%m%d-%H%M%S")
-                videos_list_path = f"book/Videos_{current_datetime}" 
-                for prompt in out:
-                    print(prompt)
-                    video = generate_and_download_video(
-                        videos_list_path, sd_api_key, prompt, "book", cfg_scale=5, motion_bucket_id=200
-                    )
-                    videos.append(video)
-                    # counter += 1
-                    # if counter == 2:
-                    #     break
+            #     videos = []
+            #     counter = 0
+            #     current_datetime = time.strftime("%Y%m%d-%H%M%S")
+            #     videos_list_path = f"book/Videos_{current_datetime}" 
+            #     for prompt in out:
+            #         print(prompt)
+            #         video = generate_and_download_video(
+            #             videos_list_path, sd_api_key, prompt, "book", cfg_scale=5, motion_bucket_id=200
+            #         )
+            #         videos.append(video)
+            #         counter += 1
+            #         if counter == 2:
+            #             break
 
                        
-                # Stitch videos together
-                print("video path:", videos)
-                current_datetime = time.strftime("%Y%m%d-%H%M%S")
-                output = f"/mnt/c/Users/t/Documents/GIT/Encode-AI-Hackathon/synopsis-app/book/merged_video_{current_datetime}.mp4"
-                merge_videos(videos, output_path=output)
+            #     # Stitch videos together
+            #     print("video path:", videos)
+            #     current_datetime = time.strftime("%Y%m%d-%H%M%S")
+            #     output = f"/mnt/c/Users/t/Documents/GIT/Encode-AI-Hackathon/synopsis-app/book/merged_video_{current_datetime}.mp4"
+            #     merge_videos(videos, output_path=output)
 
             # Display video
             st.subheader("Processed Video:")
-            st.video(output)
+            # st.video(output)
+            demo_output = "/mnt/c/Users/t/Documents/GIT/Encode-AI-Hackathon/synopsis-app/book/merged_video.mp4"
+            st.video(demo_output)
 
     # """
     # 1) Upload PDF of book 

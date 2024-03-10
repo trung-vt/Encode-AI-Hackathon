@@ -108,7 +108,7 @@ def download_generated_video(api_key, generation_id, output_path):
 
 
 def generate_and_download_video(
-    api_key, text_prompts, book_name, cfg_scale=1.8, motion_bucket_id=127
+    videos_list_path, api_key, text_prompts, book_name, cfg_scale=1.8, motion_bucket_id=127
 ):
     """
         Generate image and animate it via Stability AI API.
@@ -143,9 +143,9 @@ def generate_and_download_video(
     resize_image(image_path)
     image_name = os.path.basename(image_path)
 
-    os.makedirs(f"{book_name}/Videos", exist_ok=True)
+    os.makedirs(videos_list_path, exist_ok=True)
 
-    out_path_videos = f"{book_name}/Videos/{os.path.basename(image_path)[:-4]}.mp4"
+    out_path_videos = f"{videos_list_path}/{os.path.basename(image_path)[:-4]}.mp4"
     generation_id = get_generation_id(api_key, image_path, cfg_scale, motion_bucket_id)
 
     if generation_id:
