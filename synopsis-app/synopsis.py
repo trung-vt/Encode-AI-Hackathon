@@ -24,9 +24,9 @@ def main():
 
     def merge_videos(videos, output_path):
         # Load each video clip
-        if not videos:
-            print("No video files found.")
-        return
+        # if not videos:
+        #     print("No video files found.")
+        # return
         video_clips = [VideoFileClip(path) for path in videos]
 
         # Concatenate the video clips into one longer video
@@ -68,31 +68,33 @@ def main():
                 out = ChaptersSummaryAI(file_path, api_key).ChapterSummary()
                 # Send each chapter summary to SD to get videos
                 videos = get_files_in_directory(
-                    "C:\\Users\\roman\\Projects\\synopsis-app\\book\\Videos"
+                    # "C:\\Users\\roman\\Projects\\synopsis-app\\book\\Videos"
+                    "/mnt/c/Users/t/Documents/GIT/Encode-AI-Hackathon/synopsis-app/book/Videos"
                 )
-                # for prompt in out:
-                #     print(prompt)
-                #     video = generate_and_download_video(
-                #         sd_api_key, prompt, "book", cfg_scale=5, motion_bucket_id=200
-                #     )
-                #     videos.append(video)
+
+                for prompt in out:
+                    print(prompt)
+                    video = generate_and_download_video(
+                        sd_api_key, prompt, "book", cfg_scale=5, motion_bucket_id=200
+                    )
+                    videos.append(video)
 
                 # Stitch videos together
                 print("video path:", videos)
-                output = "merged_video"
+                output = "/mnt/c/Users/t/Documents/GIT/Encode-AI-Hackathon/synopsis-app/book/merged_video.mp4"
                 merge_videos(videos, output_path=output)
 
             # Display video
             st.subheader("Processed Video:")
             st.video(output)
 
-    """
-    1) Upload PDF of book 
-    2) PDF sent to chatGPT to summarise chapters of a book
-    3) Each chapter is sent to SD to be turned into an image
-    4) Each image is sent to SVD to be turned into a video
-    5) All videos are then merged together and displayed on the page ???
-    """
+    # """
+    # 1) Upload PDF of book 
+    # 2) PDF sent to chatGPT to summarise chapters of a book
+    # 3) Each chapter is sent to SD to be turned into an image
+    # 4) Each image is sent to SVD to be turned into a video
+    # 5) All videos are then merged together and displayed on the page ???
+    # """
 
 
 if __name__ == "__main__":
