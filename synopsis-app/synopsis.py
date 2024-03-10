@@ -20,7 +20,8 @@ def main():
     )
 
     sd_api_key = "sk-bkuIqt0pQzG17G7H3q8phhkvYLBkUK3S7z4vqMfLtCdEjkDJ"
-    api_key = "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"
+    # chatgpt_api_key = "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"
+    chatgpt_api_key = "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"
 
     def merge_videos(videos, output_path):
         # Load each video clip
@@ -45,7 +46,7 @@ def main():
                 files.append(os.path.join(directory_path, file_name))
         return files
 
-    if not api_key:
+    if not chatgpt_api_key:
         st.error("Please set the API_KEY environment variable.")
 
     else:
@@ -65,7 +66,7 @@ def main():
             # Placeholder for backend processing (simulated with time.sleep)
             with st.spinner("Processing..."):
 
-                out = ChaptersSummaryAI(file_path, api_key).ChapterSummary()
+                out = ChaptersSummaryAI(file_path, chatgpt_api_key).ChapterSummary()
                 # Send each chapter summary to SD to get videos
                 # videos = get_files_in_directory(
                 #     # "C:\\Users\\roman\\Projects\\synopsis-app\\book\\Videos"
